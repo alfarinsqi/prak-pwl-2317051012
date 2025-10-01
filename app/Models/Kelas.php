@@ -14,5 +14,14 @@ class Kelas extends Model
     public function user()
     {
         return $this->hasMany(UserModel::class, 'kelas_id');
-    }
+    } 
+
+    public function getKelas(){ 
+    return $this->all();
 }
+
+    
+
+
+} 
+
