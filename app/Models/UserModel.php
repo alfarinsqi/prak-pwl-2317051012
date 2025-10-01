@@ -9,7 +9,7 @@ class UserModel extends Model
 {
     use HasFactory;
 
-    protected $table = 'user';
+    protected $table = 'users';
     protected $guarded = ['id'];
 
     public function kelas()
@@ -19,7 +19,7 @@ class UserModel extends Model
 
     public function getUser(){
         return $this->join('kelas', 'kelas_id', '=', 'user.kelas_id')
-                    ->select('user.*', 'kelas.nama_kelas as nama_kelas')
+                    ->select('users.*', 'kelas.nama_kelas as nama_kelas')
                     ->get();
     }
 
