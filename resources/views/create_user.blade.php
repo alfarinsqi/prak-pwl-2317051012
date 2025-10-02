@@ -1,29 +1,41 @@
 @extends('layouts.app')
 
 @section('content')
+<div class="d-flex justify-content-center align-items-center min-vh-100">
+    <div class="card shadow-lg p-4" style="width: 400px; background-color: #6F4E37; border-radius: 12px;">
+        <h3 class="text-center mb-4 text-white">Input Data Baru</h3>
 
-<h1>Buat Orang Baru</h1> 
+        <form action="{{ route('user.store') }}" method="POST">
+            @csrf 
 
-<form action="{{ route('user.store') }}" method="POST">
-    @csrf 
+            <div class="mb-3">
+                <label for="nama" class="form-label text-white">Nama:</label>
+                <input type="text" id="nama" name="nama" class="form-control" required>
+            </div>
 
-    <label for="nama">Nama:</label><br> 
-    <input type="text" id="nama" name="nama"><br><br> 
+            <div class="mb-3">
+                <label for="nim" class="form-label text-white">NPM:</label>
+                <input type="text" id="nim" name="nim" class="form-control" required>
+            </div>
 
-    <label for="npm">NPM:</label><br> 
-    <input type="text" id="npm" name="npm"><br><br> 
+            <div class="mb-3">
+                <label for="kelas_id" class="form-label text-white">Kelas:</label>
+                <select name="kelas_id" id="kelas_id" class="form-select" required>
+                    <option value="">-- Pilih Kelas --</option>
+                    @foreach ($kelas as $kelasItem) 
+                        <option value="{{ $kelasItem->id }}">
+                            {{ $kelasItem->nama_kelas }}
+                        </option> 
+                    @endforeach 
+                </select>
+            </div>
 
-    <label for="kelas_id">Kelas:</label><br>
-    <select name="kelas_id" id="kelas_id"> 
-        <option value="">-- Pilih Kelas --</option>
-        @foreach ($kelas as $kelasItem) 
-            <option value="{{ $kelasItem->id }}">
-                {{ $kelasItem->nama_kelas }}
-            </option> 
-        @endforeach 
-    </select><br><br> 
-
-    <button type="submit">Submit</button> 
-</form> 
-
+            <button type="submit" 
+                    class="btn w-100" 
+                    style="background-color: #d2b48c; color: black; font-weight: bold;">
+                Submit
+            </button> 
+        </form> 
+    </div>
+</div>
 @endsection
