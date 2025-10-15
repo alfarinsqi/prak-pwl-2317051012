@@ -3,46 +3,74 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Kelas;
-use App\Models\UserModel;
+use App\Models\User;
+
 class UserController extends Controller
 {
-
-    public $userModel;
-    public $kelasModel;
-
-    public function __construct(){
-        $this->userModel = new UserModel();
-        $this->kelasModel = new Kelas();
+    // tampilkan semua user
+    public function index()
+    {
+        $users = User::all();
+        return view('list_user', compact('users'));
     }
 
-    public function index(){
-        $data = [
-            'title' => 'List User',
-            'users' => $this->userModel->getUser()
-        ];
-
-        return view('list_user', $data);
-    }
-    public function create(){
-        $kelasModel = new Kelas();
-        $Kelas = $kelasModel->getKelas();
-        $data = [
-            'title' => 'Create User',
-            'kelas' => $Kelas
-        ];
-
-        return view('create_user', $data);
+    // tampilkan form create
+    public function create()
+    {
+        return view('create_user');
     }
 
-    public function store(Request $request){
-        $this->userModel->create([
-            'nama' => $request->input('nama'),
-            'nim' => $request->input('nim'),
-            'kelas_id' => $request->input('kelas_id'),
+    // simpan user baru
+    public function store(Request $request)
+    {
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'nim' => 'required|numeric|unique:users,nim',
+            'kelas_id' => 'required|string',
         ]);
-          
 
-        return redirect()->to('/user');
+        User::create([
+            'nama' => $request->nama,
+            'nim' => $request->nim,
+            'kelas_id' => $request->kelas_id,
+        ]);
+
+        return redirect()->route('user.index')->with('success', 'Data berhasil disimpan!');
+    }
+
+    // tampilkan form edit
+    public function edit($id)
+    {
+        $user = User::findOrFail($id);
+        return view('edit_user', compact('user'));
+    }
+
+    // update data user
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            // allow same nim for the record being updated
+            'nim' => 'required|numeric|unique:users,nim,' . $id,
+            'kelas_id' => 'required|string',
+        ]);
+
+        $user = User::findOrFail($id);
+        $user->update([
+            'nama' => $request->nama,
+            'nim' => $request->nim,
+            'kelas_id' => $request->kelas_id,
+        ]);
+
+        return redirect()->route('user.index')->with('success', 'Data berhasil diperbarui!');
+    }
+
+    // hapus user
+    public function destroy($id)
+    {
+        $user = User::findOrFail($id);
+        $user->delete();
+
+        return redirect()->route('user.index')->with('success', 'Data berhasil dihapus!');
     }
 }

@@ -11,7 +11,7 @@ class Matakuliah extends Model
     use HasFactory;
 
     protected $table = 'mata_kuliah';
-    protected $guarded = ['id'];
+    protected $fillable = ['nama_mk', 'sks']; // gunakan fillable agar bisa mass assignment
 
     public $incrementing = false;
     protected $keyType = 'string';
@@ -25,10 +25,5 @@ class Matakuliah extends Model
                 $model->{$model->getKeyName()} = (string) Str::uuid();
             }
         });
-    }
-
-    public function getAllMK()
-    {
-        return $this->all();
     }
 }
